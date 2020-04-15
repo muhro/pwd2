@@ -4,7 +4,7 @@ window.addEventListener('load', async () => {
   const ul = document.querySelector('ul');
   const rfrsh = document.querySelector('#refresh');
   const form = document.querySelector('form');
-  const username = 'ilkka';
+  const username = 'lauri';
   const greeting = form.elements.greeting;
 
   if ('serviceWorker' in navigator) {
