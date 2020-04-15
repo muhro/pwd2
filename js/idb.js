@@ -29,37 +29,49 @@ request.onsuccess = (event) => {
 };
 
 const saveData = (name, data) => {
-  const tx = db.transaction(name, 'readwrite');
-  const store = tx.objectStore(name);
-  store.put(data);
-  tx.oncomplete = () => {
-    console.log('put ready');
-  };
-  tx.onerror = () => {
-    console.log('put error');
-  };
+  return new Promise((resolve, reject)=> {
+    const tx = db.transaction(name, 'readwrite');
+    const store = tx.objectStore(name);
+    store.put(data);
+    tx.oncomplete = () => {
+      console.log('put ready');
+      resolve(true);
+    };
+    tx.onerror = () => {
+      console.log('put error');
+      reject('put error');
+    };
+  });
 };
 
 const loadData = (name) => {
-  const tx = db.transaction(name, 'readwrite');
-  const store = tx.objectStore(name);
-  const query = store.getAll();
-  tx.oncomplete = () => {
-    console.log('query ready', query.result);
-  };
-  tx.onerror = () => {
-    console.log('query error');
-  };
+  return new Promise((resolve, reject)=>{
+    const tx = db.transaction(name, 'readwrite');
+    const store = tx.objectStore(name);
+    const query = store.getAll();
+    tx.oncomplete = () => {
+      console.log('query ready', query.result);
+      resolve(query.result);
+    };
+    tx.onerror = () => {
+      console.log('query error');
+      reject('query error');
+    };
+  })
 };
 
 const clearData = (name) => {
-  const tx = db.transaction(name, 'readwrite');
-  const store = tx.objectStore(name);
-  store.clear();
-  tx.oncomplete = () => {
-    console.log('clear ready');
-  };
-  tx.onerror = () => {
-    console.log('clear error');
-  };
+  return new Promise((resolve, reject)=> {
+    const tx = db.transaction(name, 'readwrite');
+    const store = tx.objectStore(name);
+    store.clear();
+    tx.oncomplete = () => {
+      console.log('clear ready');
+      resolve(true);
+    };
+    tx.onerror = () => {
+      console.log('clear error');
+      reject('clear error');
+    };
+  });
 };

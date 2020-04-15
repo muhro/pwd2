@@ -10,20 +10,29 @@ window.addEventListener('load', async () => {
   if ('serviceWorker' in navigator) {
     try {
       await navigator.serviceWorker.register('./sw.js');
+      const registration = await navigator.serviceWorker.ready;
+      if ('sync' in registration){
+        form.addEventListener('submit', async (event) => {
+          event.preventDefault();
+          const message = {
+            username,
+            greeting: greeting.value,
+          };
+          try{
+          saveData('outbox', message);
+          await registration.sync.register('send-message')
+          }catch (e) {
+          console.log(e.message)
+          }
+        });
+      }
     }
     catch (e) {
       console.log(e.message);
     }
   }
 
-  form.addEventListener('submit', (event) => {
-    event.preventDefault();
-    const message = {
-      username,
-      greeting: greeting.value,
-    };
-    saveData('outbox', message);
-  });
+
 
   const init = async () => {
     const data = [];

@@ -47,9 +47,13 @@ self.addEventListener('sync', (event) => {
   }
 });
 
+
 const sendToServer = async () => {
   try {
-
+    const outbox = await loadData('outbox');
+    const sentMessages = await Promise.all(outbox.map(async (message) => await saveGreeting(message)));
+    console.log('sentMessages', sentMessages);
+    clearData('outbox');
   } catch (e) {
     console.log(e.message);
   }
