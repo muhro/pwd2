@@ -40,3 +40,17 @@ self.addEventListener('fetch', (e) => {
     }
   })());
 });
+
+self.addEventListener('sync', (event) => {
+  if (event.tag == 'send-message') {
+    event.waitUntil(sendToServer());
+  }
+});
+
+const sendToServer = async () => {
+  try {
+
+  } catch (e) {
+    console.log(e.message);
+  }
+};

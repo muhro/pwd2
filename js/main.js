@@ -4,15 +4,32 @@ window.addEventListener('load', async () => {
   const ul = document.querySelector('ul');
   const rfrsh = document.querySelector('#refresh');
   const form = document.querySelector('form');
-  const username = 'changeThis';
+  const username = 'ilkka';
   const greeting = form.elements.greeting;
-  console.log('hello');
+
+  if ('serviceWorker' in navigator) {
+    try {
+      await navigator.serviceWorker.register('./sw.js');
+    }
+    catch (e) {
+      console.log(e.message);
+    }
+  }
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const message = {
+      username,
+      greeting: greeting.value,
+    };
+    saveData('outbox', message);
+  });
 
   const init = async () => {
     const data = [];
     try {
       const greetings = await getGreetingsByUser(username);
-       for (const message of greetings) {
+      for (const message of greetings) {
         data.push(message);
       }
     }
@@ -22,7 +39,7 @@ window.addEventListener('load', async () => {
 
     ul.innerHTML = '';
     data.forEach(item => {
-      ul.innerHTML += `<ul>${item.username}: ${item.greeting}</ul>`;
+      ul.innerHTML += `<li>${item.username}: ${item.greeting}</li>`;
     });
   };
 
